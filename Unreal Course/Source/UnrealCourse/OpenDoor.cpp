@@ -19,18 +19,23 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
-		//Get the owner
-		AActor* Door = GetOwner();
 
-		//Create rotator
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn(); //We look from top to bottom for the "mind" of the player, then we look from botton to top to the AActor (Pawn in this case) that is being controlled by the "mind"
 
-		FRotator Rotation = FRotator(0.f, 35.f, 0.f);
+}
 
-		//Set NEW rotator
+void UOpenDoor::OpenDoor()
+{
+	//Get the owner
+	AActor* Door = GetOwner();
 
-		Door->SetActorRotation(Rotation);
-	
+	//Create rotator
+
+	FRotator Rotation = FRotator(0.f, 35.f, 0.f);
+
+	//Set NEW rotator
+
+	Door->SetActorRotation(Rotation);
 }
 
 
@@ -39,6 +44,12 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (PressurePlate->IsOverlappingActor(ActorThatOpens)) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
+	{
+		OpenDoor();
+	}
+	
+	
+	
 }
 
