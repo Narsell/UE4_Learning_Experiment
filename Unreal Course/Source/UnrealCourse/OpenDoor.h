@@ -11,7 +11,7 @@ class UNREALCOURSE_API UOpenDoor : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
@@ -19,21 +19,28 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void OpenDoor();
+	void OpenCloseDoor(float Yaw);
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 
-	UPROPERTY(VisibleAnywhere)
-		float openAngle = 90.f;
-
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+		float openAngle = -90.f;
+	UPROPERTY(EditAnywhere)
+		float closeAngle = 0.f;
+	UPROPERTY(EditAnywhere)
+		float closeDoorDelay = 0.7f;
 
-	//UPROPERTY(EditAnywhere)
-		AActor* ActorThatOpens;
+	//Giving this a value to avoid errors if the players wont step on the trigger.
+	float openDoorTime = 0.f; 
+
+	UPROPERTY(VisibleAnywhere)
+		ATriggerVolume* PressurePlate;
+
+	AActor* Door = GetOwner();
+	AActor* ActorThatOpens;
 	
 };
