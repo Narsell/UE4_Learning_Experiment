@@ -19,8 +19,6 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Grabber component reporting for duty hehe"));
 	
 }
 
@@ -30,6 +28,16 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FVector ViewPointLocation;
+	FRotator ViewPointRotator;
+
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(ViewPointLocation, ViewPointRotator); // I pass two empty variables to this function and it will modify them on the inside with the PlayerViewPoint values.
+
+	//UE_LOG(LogTemp, Warning, TEXT("Location: %s,  Rotation: %s"), *ViewPointLocation.ToString(), *ViewPointRotator.ToString() )
+
+	FVector VectorEnd = ViewPointLocation + ViewPointRotator.Vector()*Reach; //Basic vector addition.
+
+	DrawDebugLine(GetWorld(), ViewPointLocation, VectorEnd, FColor(0, 255, 0), false, 0.f, 0.f, 10.f);
+
 }
 
