@@ -20,7 +20,7 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn(); //We look from top to bottom for the "mind" of the player, then we look from botton to top to the AActor (Pawn in this case) that is being controlled by the "mind"
-
+	
 }
 
 void UOpenDoor::OpenCloseDoor(float Yaw)
