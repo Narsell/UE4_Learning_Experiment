@@ -7,12 +7,21 @@
 */DerivedDataCache
 */Intermediate
 */Saved
-Unreal Course/Content/StarterContent
+Unreal Course/Content/StarterContent/Materials
+Unreal Course/Content/StarterContent/Textures
+Unreal Course/Content/StarterContent/Audio
+Unreal Course/Content/StarterContent/Architecture
+Unreal Course/Content/StarterContent/Blueprints
+Unreal Course/Content/StarterContent/Maps
+Unreal Course/Content/StarterContent/HDRI
+Unreal Course/Content/StarterContent/Shapes
+Unreal Course/Content/StarterContent/Particles
+
 
 ########################## 
 #    VSGenerated Files   #
 ##########################
 
 *.VC.db
-
+*.suo
 *.ipch
