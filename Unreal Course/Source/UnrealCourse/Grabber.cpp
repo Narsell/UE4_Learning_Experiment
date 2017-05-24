@@ -2,6 +2,7 @@
 
 #include "UnrealCourse.h"
 #include "Grabber.h"
+#define OUT //Just to know when a param its out in the func call.
 
 
 // Sets default values for this component's properties
@@ -28,16 +29,31 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	///Getting the players viewpoint.
 	FVector ViewPointLocation;
 	FRotator ViewPointRotator;
 
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(ViewPointLocation, ViewPointRotator); // I pass two empty variables to this function and it will modify them on the inside with the PlayerViewPoint values.
 
-	//UE_LOG(LogTemp, Warning, TEXT("Location: %s,  Rotation: %s"), *ViewPointLocation.ToString(), *ViewPointRotator.ToString() )
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(ViewPointLocation, ViewPointRotator);// I pass two empty variables to this function and it will modify them on the inside with the PlayerViewPoint values.
 
+
+	///Calculating the Vector that points in the direction of the players "eye" and drawing a GREEN trace into the world to visualise.
 	FVector VectorEnd = ViewPointLocation + ViewPointRotator.Vector()*Reach; //Basic vector addition.
-
 	DrawDebugLine(GetWorld(), ViewPointLocation, VectorEnd, FColor(0, 255, 0), false, 0.f, 0.f, 10.f);
 
+	///Now getting the ray cast out.
+	FHitResult Hit;
+	FCollisionObjectQueryParams ObjectTypes(ECollisionChannel::ECC_PhysicsBody);
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, Player);
+
+	GetWorld()->LineTraceSingleByObjectType(OUT Hit, ViewPointLocation, VectorEnd, ObjectTypes, TraceParameters);
+
+	///Logging to the console what we hit.
+	AActor* ActorHit = Hit.GetActor();
+
+	if(ActorHit) //To avoid doing this when a null pointer gets returned because the player is not looking at an physicsBody Actor.
+		UE_LOG(LogTemp, Warning, TEXT("Ouch, you just hit a %s, have a little respect bud"), *(ActorHit->GetName()) );
+
+	
 }
 
