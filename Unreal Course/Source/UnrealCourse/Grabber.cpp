@@ -20,6 +20,29 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+
+	///Look for the attached physics handle component.
+	PhysicsHandle = Player->FindComponentByClass<UPhysicsHandleComponent>(); // We find the component doing a top-down search and looking the component of type UPhysicsHandleComponent.
+	if(PhysicsHandle)
+	{ 
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component found in Actor %s, please add one"), *(Player->GetName()) )
+	}
+
+	///Look for the attached (in play time) input component.
+
+	InputComponent = Player->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Input Component found in Actor %s"), *(Player->GetName()))
+			InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("No Input Component found in Actor %s"), *(Player->GetName()))
+	}
 	
 }
 
@@ -52,8 +75,13 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	AActor* ActorHit = Hit.GetActor();
 
 	if(ActorHit) //To avoid doing this when a null pointer gets returned because the player is not looking at an physicsBody Actor.
-		UE_LOG(LogTemp, Warning, TEXT("Ouch, you just hit a %s, have a little respect bud"), *(ActorHit->GetName()) );
+		UE_LOG(LogTemp, Warning, TEXT("Ouch, you just hit a %s, have a little respect bud"), *(ActorHit->GetName()) )
 
 	
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"))
 }
 
