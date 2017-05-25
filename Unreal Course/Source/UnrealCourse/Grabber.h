@@ -33,6 +33,8 @@ private:
 	UInputComponent* InputComponent = nullptr;
 	AActor* Player = GetOwner();
 
+	//Get Player's Viewpoint
+	FVector GetRaycastEndPoint();
 	//Raycast and grab what's in reach
 	void Grab(); 
 	//Called when grab is released
