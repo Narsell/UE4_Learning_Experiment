@@ -2,6 +2,7 @@
 
 #include "UnrealCourse.h"
 #include "OpenDoor.h"
+#define OUT
 
 
 // Sets default values for this component's properties
@@ -19,7 +20,6 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn(); //We look from top to bottom for the "mind" of the player, then we look from botton to top to the AActor (Pawn in this case) that is being controlled by the "mind"
 	
 }
 
@@ -34,18 +34,30 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate->IsOverlappingActor(ActorThatOpens)) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
+	if (MassOnPressurePlate() > 95.f) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
 	{
 		OpenCloseDoor(openAngle);
 		openDoorTime = GetWorld()->GetRealTimeSeconds();
 	}
 	else
-	{
 		if (GetWorld()->GetRealTimeSeconds() - openDoorTime > closeDoorDelay)
 			OpenCloseDoor(closeAngle);
-	}
-	
-	
 	
 }
 
+float UOpenDoor::MassOnPressurePlate()
+{
+	float TotalMass = 0.f;
+	//Find all the overlaping actors
+	TArray<AActor*> OverlappingActors; 
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors); //Out parameters.
+
+	//Add their masses.
+	for (const auto* Actor : OverlappingActors) //New C++11 range based for loops.
+	{
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass(); //IMPORTANT, the mass on an actor is an UPrimitiveComponent, so we'll get access to it through there
+		UE_LOG(LogTemp, Warning, TEXT("%s is on pressure plate"), *Actor->GetName())
+	}
+
+	return TotalMass;
+}

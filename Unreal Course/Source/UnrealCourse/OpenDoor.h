@@ -27,6 +27,8 @@ public:
 
 private:
 
+	float MassOnPressurePlate();
+
 	UPROPERTY(EditAnywhere)
 		float openAngle = -90.f;
 	UPROPERTY(EditAnywhere)
@@ -41,6 +43,6 @@ private:
 		ATriggerVolume* PressurePlate;
 
 	AActor* Door = GetOwner();
-	AActor* ActorThatOpens;
+
 	
 };
