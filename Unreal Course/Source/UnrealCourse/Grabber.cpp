@@ -20,15 +20,9 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FindPhysicsComponent();
+	PhysicsHandle = Player->FindComponentByClass<UPhysicsHandleComponent>(); // We find the component doing a top-down search and looking the component of type UPhysicsHandleComponent.
 	SetupInputComponent();
 	
-}
-
-void UGrabber::FindPhysicsComponent()
-{
-	PhysicsHandle = Player->FindComponentByClass<UPhysicsHandleComponent>(); // We find the component doing a top-down search and looking the component of type UPhysicsHandleComponent.
-
 }
 
 void UGrabber::SetupInputComponent()
@@ -48,14 +42,13 @@ void UGrabber::Grab()
 	
 	if (HitResult.GetActor()) //If there is an Actor in the HitResult, then attach to Physics Handle  
 	{
-		UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+		UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent(); //Gets to mesh in our case
 		PhysicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true);
 	}
 }
 
 void UGrabber::Release()
 {
-
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -63,8 +56,8 @@ const FHitResult UGrabber::GetPhysicsBodyInReach()
 {
 
 	FHitResult Hit;
-	FCollisionObjectQueryParams ObjectTypes(ECollisionChannel::ECC_PhysicsBody);
-	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, Player);
+	FCollisionObjectQueryParams ObjectTypes(ECollisionChannel::ECC_PhysicsBody); //Saying we want to target objects in the PhysicsBody channel
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, Player);	
 
 	GetWorld()->LineTraceSingleByObjectType(OUT Hit, Player->GetActorLocation(), GetRaycastEndPoint(), ObjectTypes, TraceParameters);
 

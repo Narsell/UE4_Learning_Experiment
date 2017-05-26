@@ -33,14 +33,12 @@ private:
 	UInputComponent* InputComponent = nullptr;
 	AActor* Player = GetOwner();
 
-	//Get Player's Viewpoint
+	//Get the location of the END POINT of the raycast vector.
 	FVector GetRaycastEndPoint();
 	//Raycast and grab what's in reach
 	void Grab(); 
 	//Called when grab is released
 	void Release();
-	//Look for the attached physics handle component.
-	void FindPhysicsComponent();
 	//Look for the attached (in play time) input component.
 	void SetupInputComponent();
 	//Returns FHitResult of the first physics body in range
