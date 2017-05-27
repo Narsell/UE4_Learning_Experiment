@@ -21,6 +21,9 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if(!PressurePlate)
+		UE_LOG(LogTemp, Error, TEXT("No trigger volume asociated with Pressure Plate component in the actor %s, please add one."), *Door->GetName())
+	
 }
 
 void UOpenDoor::OpenCloseDoor(float Yaw)
@@ -36,20 +39,23 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (MassOnPressurePlate() > 95.f) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
 	{
-		OpenCloseDoor(openAngle);
+		OpenCloseDoor(OpenAngle);
 		openDoorTime = GetWorld()->GetRealTimeSeconds();
 	}
 	else
-		if (GetWorld()->GetRealTimeSeconds() - openDoorTime > closeDoorDelay)
-			OpenCloseDoor(closeAngle);
+		if (GetWorld()->GetRealTimeSeconds() - openDoorTime > CloseDoorDelay)
+			OpenCloseDoor(CloseAngle);
 	
 }
 
 float UOpenDoor::MassOnPressurePlate()
 {
-	float TotalMass = 0.f;
+	if (!PressurePlate) { return 0.f; } //This protect PressurePlate from being used below.
+
 	//Find all the overlaping actors
+	float TotalMass = 0.f;
 	TArray<AActor*> OverlappingActors; 
+	
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors); //Out parameters.
 
 	//Add their masses.

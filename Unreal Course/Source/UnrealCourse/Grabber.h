@@ -39,6 +39,8 @@ private:
 	void Grab(); 
 	//Called when grab is released
 	void Release();
+	//Look for the physics handle component
+	void LookForPhysicsHandle();
 	//Look for the attached (in play time) input component.
 	void SetupInputComponent();
 	//Returns FHitResult of the first physics body in range

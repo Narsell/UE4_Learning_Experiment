@@ -20,26 +20,39 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	PhysicsHandle = Player->FindComponentByClass<UPhysicsHandleComponent>(); // We find the component doing a top-down search and looking the component of type UPhysicsHandleComponent.
+	LookForPhysicsHandle();
 	SetupInputComponent();
 	
+}
+
+void UGrabber::LookForPhysicsHandle()
+{
+	PhysicsHandle = Player->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("No physics handle component in actor %s, please add one."), *Player->GetName())
+	}
 }
 
 void UGrabber::SetupInputComponent()
 {
 	InputComponent = Player->FindComponentByClass<UInputComponent>();
-	if (InputComponent)
+	if (!InputComponent)
+		UE_LOG(LogTemp, Error, TEXT("No input component in actor %s."), *Player->GetName())
+	else
 	{
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
+		
 
 }
 
 void UGrabber::Grab()
 {
+	if (!PhysicsHandle) { return; } 
+
 	FHitResult HitResult = GetPhysicsBodyInReach();
-	
 	if (HitResult.GetActor()) //If there is an Actor in the HitResult, then attach to Physics Handle  
 	{
 		UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent(); //Gets to mesh in our case
@@ -49,6 +62,7 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -78,6 +92,9 @@ FVector UGrabber::GetRaycastEndPoint()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+
+	if (!PhysicsHandle) { return; }
 
 	if (PhysicsHandle->GrabbedComponent) //Check if we have a grabbed component
 		PhysicsHandle->SetTargetLocation(GetRaycastEndPoint());

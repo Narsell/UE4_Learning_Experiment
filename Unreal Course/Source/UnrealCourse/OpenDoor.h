@@ -30,17 +30,17 @@ private:
 	float MassOnPressurePlate();
 
 	UPROPERTY(EditAnywhere)
-		float openAngle = -90.f;
+		float OpenAngle = -90.f;
 	UPROPERTY(EditAnywhere)
-		float closeAngle = 0.f;
+		float CloseAngle = 0.f;
 	UPROPERTY(EditAnywhere)
-		float closeDoorDelay = 0.7f;
+		float CloseDoorDelay = 0.7f;
 
 	//Giving this a value to avoid errors if the players wont step on the trigger.
 	float openDoorTime = 0.f; 
 
-	UPROPERTY(VisibleAnywhere)
-		ATriggerVolume* PressurePlate;
+	UPROPERTY(EditAnywhere)
+		ATriggerVolume* PressurePlate = nullptr;
 
 	AActor* Door = GetOwner();
 
