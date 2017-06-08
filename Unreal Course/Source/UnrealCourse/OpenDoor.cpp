@@ -26,10 +26,8 @@ void UOpenDoor::BeginPlay()
 	
 }
 
-void UOpenDoor::OpenCloseDoor(float Yaw)
-{
-	Door->SetActorRotation(FRotator(0.f, Yaw, 0.f));
-}
+
+
 
 
 // Called every frame
@@ -37,14 +35,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (MassOnPressurePlate() > 95.f) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
+	if (MassOnPressurePlate() > TriggerMass) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
 	{
-		OpenCloseDoor(OpenAngle);
-		openDoorTime = GetWorld()->GetRealTimeSeconds();
+		OnOpen.Broadcast(); //Making a Blueprint event when the door should open.
+
 	}
 	else
-		if (GetWorld()->GetRealTimeSeconds() - openDoorTime > CloseDoorDelay)
-			OpenCloseDoor(CloseAngle);
+		OnClose.Broadcast(); //Making a Blueprint event when the door should close.
 	
 }
 
