@@ -35,12 +35,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (MassOnPressurePlate() > TriggerMass) //If ActorThatOpens is in the Preassure Plate boundaries, open the door.
 	
-		OnOpen.Broadcast(); //Making a Blueprint event when the door should open.
-	else
-		OnClose.Broadcast(); //Making a Blueprint event when the door should close.
-	
+		if (MassOnPressurePlate() > TriggerMass) 
+
+			OnOpen.Broadcast(); //Making a Blueprint event when the door should open.
+		else
+			OnClose.Broadcast(); //Making a Blueprint event when the door should close. 
+
 }
 
 float UOpenDoor::MassOnPressurePlate()
